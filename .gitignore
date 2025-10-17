@@ -1,0 +1,11 @@
+# Dependencies
+/node_modules
+
+# Environment variables
+.env
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Prisma generated files
+/generated/prisma
