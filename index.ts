@@ -60,7 +60,7 @@ const adminProtect = (req:Request, res:Response, next:NextFunction) => {
 };
 
 
-//post /register
+//post /register user
 app.post('/register', async(req, res) =>{
     const {email, name, password} = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -306,7 +306,8 @@ app.post('/orders', protect, async (req,res) =>{
 
     try{
         const {userId} = req.user as {userId: number};
-        const {paymentMethodId, addressDetail, items, employeeId} = req.body;
+
+        const {paymentMethodId, addressDetail, items} = req.body;
 
         // Get all employees
         const allEmployees = await prisma.employee.findMany();
@@ -321,7 +322,7 @@ app.post('/orders', protect, async (req,res) =>{
         }
 
         //basic validation
-        if(!paymentMethodId || !items || !Array.isArray(items) || items.length === 0 || !employeeId){
+        if(!paymentMethodId || !items || !Array.isArray(items) || items.length === 0 ){
             return res.status(400).json({message: 'Invalid order data provided'});
         }
 
@@ -329,9 +330,9 @@ app.post('/orders', protect, async (req,res) =>{
         const newOrder = await prisma.order.create({
             data: {
                 userId: userId,
-                employeeId: randomEmployee.id,
                 paymentMethodId: paymentMethodId,
                 addressDetail: addressDetail,
+                employeeId: randomEmployee.id,
                 orderDetails: {
                     create: items.map((item: {productId: number, quantity: number}) =>({
                         productId: item.productId,
