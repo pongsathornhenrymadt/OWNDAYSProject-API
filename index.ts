@@ -320,12 +320,13 @@ app.post('/orders', protect, async (req,res) =>{
         if (!randomEmployee) {
             return res.status(500).json({message: 'Failed to assign an employee to the order'});
         }
+    
 
         //basic validation
         if(!paymentMethodId || !items || !Array.isArray(items) || items.length === 0 ){
             return res.status(400).json({message: 'Invalid order data provided'});
         }
-
+        
         //create order
         const newOrder = await prisma.order.create({
             data: {
@@ -346,6 +347,40 @@ app.post('/orders', protect, async (req,res) =>{
     } catch (error){
         console.error(error);
         return res.status(500).json({message: 'Something went wrong'});
+    }
+});
+
+//GET /orders 
+app.get('/orders', protect, async (req,res) =>{
+    try{
+        const {userId} = req.user as {userId: number};
+        const orders = await prisma.order.findMany({
+            where: {userId: userId},
+            include: {orderDetails: true}
+        });
+        res.json(orders);
+    } catch (error){
+        console.log(error);
+        return res.status(500).json({message: 'Something went wrong'});
+    }
+});
+
+//GET orders/:id
+app.get('/orders/:id', protect, async (req,res) =>{
+    try{
+        const {userId} = req.user as {userId: number};
+        const {id} = req.params as {id:string};
+        const order = await prisma.order.findUnique({
+            where: {id: parseInt(id)},
+            include: {orderDetails: true}
+        })
+        if(!order || order.userId !== userId){
+            return res.status(404).json({message: 'Order not found'});
+        }
+        res.json(order);
+    } catch (error){
+        console.log(error);
+        return res.json({message: 'Something went wrong'});
     }
 });
 

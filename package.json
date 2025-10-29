@@ -9,7 +9,7 @@
     "dev": "ts-node-esm index.ts",
     "postinstall": "prisma generate"
   },
-  "prisma" : {
+  "prisma": {
     "seed": "ts-node-esm prisma/seed.ts"
   },
   "keywords": [],
@@ -21,12 +21,14 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
     "prisma": "^6.16.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
     "@types/node": "^24.6.2",
     "ts-node": "^10.9.2",
     "typescipt": "^1.0.0",
